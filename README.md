@@ -1,2 +1,2 @@
 # be-user-ms
-User management microservice (Ruby)
+User management microservice (FastAPI)
