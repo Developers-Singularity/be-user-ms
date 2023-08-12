@@ -19,3 +19,9 @@ class UserCreate(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserChangePassword(BaseModel):
+    id: int
+    old_password: str
+    new_password: constr(min_length=4, max_length=20)

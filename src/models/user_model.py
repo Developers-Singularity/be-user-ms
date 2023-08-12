@@ -15,12 +15,8 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String(20), nullable=False)
+    username = Column(String(20), nullable=False, unique=True)
     password = Column(String(80), nullable=False)
 
-    async def create_user(self, session: Session):
-        # hashing password before save
-        self.password = SecurityManager.hash(hash_string=self.password)
-        session.add(self)
-        session.commit()
-        return self
+
+
