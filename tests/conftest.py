@@ -82,18 +82,24 @@ def create_users(session):
         User(
             username="test_user_1",
             password=SecurityManager.hash(hash_string="test_user_pw_1"),
+            name="test_user_1",
+            surname="test_user_1",
         )
     )
     session.add(
         User(
             username="test_user_2",
             password=SecurityManager.hash(hash_string="test_user_pw_2"),
+            name="test_user_2",
+            surname="test_user_2",
         )
     )
     session.add(
         User(
             username="test_user_3",
             password=SecurityManager.hash(hash_string="test_user_pw_3"),
+            name="test_user_3",
+            surname="test_user_3",
         )
     )
     session.commit()

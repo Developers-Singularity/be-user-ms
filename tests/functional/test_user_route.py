@@ -9,9 +9,24 @@ router_prefix = "/user"
 @pytest.mark.parametrize(
     "user_data",
     [
-        {"username": "test_user_1", "password": "test_user_pw_1"},
-        {"username": "test_user_2", "password": "test_user_pw_2"},
-        {"username": "test_user_3", "password": "test_user_pw_3"},
+        {
+            "username": "test_user_1",
+            "password": "test_user_pw_1",
+            "name": "test_user_1",
+            "surname": "test_user_1",
+        },
+        {
+            "username": "test_user_2",
+            "password": "test_user_pw_2",
+            "name": "test_user_2",
+            "surname": "test_user_2",
+        },
+        {
+            "username": "test_user_3",
+            "password": "test_user_pw_3",
+            "name": "test_user_3",
+            "surname": "test_user_3",
+        },
     ],
 )
 def test_post_user_ok(client, user_data, session):
@@ -27,8 +42,8 @@ def test_post_user_ok(client, user_data, session):
     [
         {"username": "", "password": ""},
         {"username": "name", "password": ""},
-        {"username": "", "password": "password"},
-        {"username": "name", "password": "pas"},
+        {"username": "", "password": "password", "name": "name", "surname": "surname"},
+        {"username": "name", "password": "pas", "name": "name", "surname": "surname"},
         {"username": "name" * 6, "password": "password"},
         {"username": "name", "password": "password" * 6},
     ],
@@ -138,3 +153,45 @@ def test_get_all_users_no_exist(client):
     response = client.get(router_prefix)
     assert response.status_code == 200
     assert response.json() == []
+
+
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {"id": 1, "name": "test_user_1", "surname": "test_user_1"},
+        {"id": 2, "surname": "test_user_2"},
+        {"id": 3, "name": "test_user_3"},
+    ],
+)
+def test_put_user_ok(client, user_data, create_users):
+    # test user update
+    id = user_data.pop("id")
+    response = client.put(f"{router_prefix}/{id}", json=user_data)
+    assert response.status_code == 200
+    if user_data.get("name"):
+        assert response.json()["name"] == user_data["name"]
+    if user_data.get("surname"):
+        assert response.json()["surname"] == user_data["surname"]
+
+
+@pytest.mark.parametrize("id", [10, 20, 30])
+def test_put_user_no_exist(client, create_users, id):
+    # test user update when user does not exist
+    response = client.put(f"{router_prefix}/{id}", json={"name": "test_user_1"})
+    assert response.status_code == 200
+    assert response.json()["detail"] == f"User with ID {id} not found."
+
+
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {"id": 1, "name": 25, "surname": "test_user_1"},
+        {"id": 2, "surname": 25},
+        {"id": 3, "name": "test_user_3" * 10},
+    ],
+)
+def test_put_user_bad_data(client, user_data, create_users):
+    # test user update with bad data
+    id = user_data.pop("id")
+    response = client.put(f"{router_prefix}/{id}", json=user_data)
+    assert response.status_code == 422

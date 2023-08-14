@@ -81,3 +81,26 @@ async def crud_get_user_by_id(session: Session, user_id: int):
     raise CustomException(
         200, "Resource not found", f"User with ID:{user_id} not found."
     )
+
+
+async def crud_update_user(session: Session, user_id: int, schema: UserCreate):
+    """CRUD function to update User data by ID
+
+    :param session: database session
+    :type session: Session
+    :param user_id: ID of user to update
+    :type user_id: int
+    :param schema: schema containing data
+    :type schema: UserCreate
+    :raises CustomException: Handled exception: User not found
+    :return: Updated user
+    :rtype: User
+    """
+    if found := session.query(User).get(user_id):
+        for field, value in schema.model_dump(exclude_unset=True).items():
+            setattr(found, field, value)
+        session.commit()
+        return found
+    raise CustomException(
+        200, "Resource not found", f"User with ID {user_id} not found."
+    )
