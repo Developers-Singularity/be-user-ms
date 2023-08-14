@@ -16,6 +16,7 @@ class CustomException(Exception):
 
 
 def respond(status: int, detail: str, message: str):
+    logging.error(f"{message}: {detail}")
     return JSONResponse(
         status_code=status,
         content={"status code": status, "message": message, "detail": detail},
@@ -23,17 +24,14 @@ def respond(status: int, detail: str, message: str):
 
 
 async def custom_exc(request: Request, error: CustomException):
-    logging.error(f"{error.message}: {error.detail}")
     return respond(error.status_code, error.detail, error.message)
 
 
 async def operational_error_exc(request: Request, error: OperationalError):
     if "Connection refused" in error.orig.__str__():
-        logging.error(error.orig)
         return respond(503, str(type(error.orig)), str(error.orig))
     return respond(500, str(type(error.orig)), str(error.orig))
 
 
 async def programming_error_exc(request: Request, error: ProgrammingError):
-    logging.error(error.orig)
     return respond(503, str(type(error.orig)), str(error.orig))

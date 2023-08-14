@@ -46,11 +46,6 @@ async def get_all_users(session=Depends(db_session)):
 @router.get("/{user_id}", response_model=UserGet, status_code=status.HTTP_200_OK)
 async def get_user_by_id(user_id: int, session=Depends(db_session)):
     logging.info("REQUEST: get user by ID")
-    response = await crud_get_user_by_id(session, user_id)
-    if not response:
-        logging.info("User with ID:{user_id} not found.")
-        raise CustomException(
-            200, "Resource not found", f"User with ID:{user_id} not found."
-        )
+    response = await crud_get_user_by_id(session, user_id)        
     logging.info("Data fetched successfully.")
     return response

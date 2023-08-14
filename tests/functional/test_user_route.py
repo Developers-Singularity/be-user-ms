@@ -105,7 +105,7 @@ def test_put_user_password_no_exist(client, create_users, user_data):
 
 @pytest.mark.parametrize("id", [1, 2, 3])
 def test_get_user_by_id_ok(client, create_users, id):
-    # test get user by id
+    # test get user by id when data exists
     response = client.get(f"{router_prefix}/{id}")
     assert response.status_code == 200
     assert response.json()["id"] == id
@@ -113,7 +113,7 @@ def test_get_user_by_id_ok(client, create_users, id):
 
 @pytest.mark.parametrize("id", [10, 20, 30])
 def test_get_user_by_id_no_exist(client, create_users, id):
-    # test get user by id
+    # test get user by id when data does not exist
     response = client.get(f"{router_prefix}/{id}")
     assert response.status_code == 200
     assert response.json()["detail"] == f"User with ID:{id} not found."
@@ -121,20 +121,20 @@ def test_get_user_by_id_no_exist(client, create_users, id):
 
 @pytest.mark.parametrize("id", ["a", "b", True])
 def test_get_user_by_id_bad_data(client, create_users, id):
-    # test get user by id
+    # test get user by id when data is invalid
     response = client.get(f"{router_prefix}/{id}")
     assert response.status_code == 422
 
 
 def test_get_all_users_ok(client, create_users):
-    # test get user by id
+    # test get user by id when data exists
     response = client.get(router_prefix)
     assert response.status_code == 200
     assert len(response.json()) == 3
 
 
 def test_get_all_users_no_exist(client):
-    # test get user by id
+    # test get user by id when data does not exist
     response = client.get(router_prefix)
     assert response.status_code == 200
     assert response.json() == []
