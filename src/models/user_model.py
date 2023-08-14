@@ -17,6 +17,3 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String(20), nullable=False, unique=True)
     password = Column(String(80), nullable=False)
-
-
-
