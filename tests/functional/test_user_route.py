@@ -9,9 +9,24 @@ router_prefix = "/user"
 @pytest.mark.parametrize(
     "user_data",
     [
-        {"username": "test_user_1", "password": "test_user_pw_1"},
-        {"username": "test_user_2", "password": "test_user_pw_2"},
-        {"username": "test_user_3", "password": "test_user_pw_3"},
+        {
+            "username": "test_user_1",
+            "password": "test_user_pw_1",
+            "name": "test_user_1",
+            "surname": "test_user_1",
+        },
+        {
+            "username": "test_user_2",
+            "password": "test_user_pw_2",
+            "name": "test_user_2",
+            "surname": "test_user_2",
+        },
+        {
+            "username": "test_user_3",
+            "password": "test_user_pw_3",
+            "name": "test_user_3",
+            "surname": "test_user_3",
+        },
     ],
 )
 def test_post_user_ok(client, user_data, session):
@@ -27,8 +42,8 @@ def test_post_user_ok(client, user_data, session):
     [
         {"username": "", "password": ""},
         {"username": "name", "password": ""},
-        {"username": "", "password": "password"},
-        {"username": "name", "password": "pas"},
+        {"username": "", "password": "password", "name": "name", "surname": "surname"},
+        {"username": "name", "password": "pas", "name": "name", "surname": "surname"},
         {"username": "name" * 6, "password": "password"},
         {"username": "name", "password": "password" * 6},
     ],
@@ -138,3 +153,18 @@ def test_get_all_users_no_exist(client):
     response = client.get(router_prefix)
     assert response.status_code == 200
     assert response.json() == []
+
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {"name": "test_user_1", "surname": "test_user_1"},
+        {"name": "test_user_2", "surname": "test_user_2"},
+        {"name": "test_user_3", "surname": "test_user_3"},
+    ],
+)
+def test_put_user_ok(client,user_data,create_users):
+    # test user update
+    response = client.put(f"{router_prefix}/{user_data['name'][-1]}", json=user_data)
+    assert response.status_code == 200
+    assert response.json()["name"] == user_data["name"]
+    assert response.json()["surname"] == user_data["surname"]
