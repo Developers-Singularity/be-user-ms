@@ -18,9 +18,8 @@ class UserCreate(BaseModel):
 
     username: constr(min_length=4, max_length=20)
     password: constr(min_length=4, max_length=20)
-    name:constr(min_length=4, max_length=20)
-    surname:constr(min_length=4, max_length=20)
-
+    name: constr(min_length=4, max_length=20)
+    surname: constr(min_length=4, max_length=20)
 
 
 class UserChangePassword(BaseModel):
@@ -28,6 +27,7 @@ class UserChangePassword(BaseModel):
     old_password: str
     new_password: constr(min_length=4, max_length=20)
 
+
 class UserUpdate(BaseModel):
-    name:constr(min_length=4, max_length=20)
-    surname:constr(min_length=4, max_length=20)
+    name: constr(min_length=4, max_length=20) | None = None
+    surname: constr(min_length=4, max_length=20) | None = None
