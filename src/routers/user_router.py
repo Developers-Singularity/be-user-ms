@@ -18,7 +18,7 @@ async def crate_user(request_body: UserCreate, session: Session = Depends(db_ses
     return response
 
 
-@router.patch("/change-password", response_model=UserGet, status_code=status.HTTP_200_OK)
+@router.put("/change-password", response_model=UserGet, status_code=status.HTTP_200_OK)
 async def patch_password(request_body: UserChangePassword, session: Session = Depends(db_session)):
     logging.info("REQUEST: change password")
     response = await change_password(session, request_body)
@@ -26,7 +26,7 @@ async def patch_password(request_body: UserChangePassword, session: Session = De
     return response
 
 
-@router.get("/")
-async def get_all_users(session=Depends(db_session)):
-    print(session)
-    return {"message": "returned"}
+#@router.get("/")
+#async def get_all_users(session=Depends(db_session)):
+#    print(session)
+#    return {"message": "returned"}
