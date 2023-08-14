@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from fastapi.middleware.cors import CORSMiddleware
-from src.errors import operational_error_exc, programming_error_exc, custom_exc, CustomException
+from src.errors import (
+    operational_error_exc,
+    programming_error_exc,
+    custom_exc,
+    CustomException,
+)
 from src.extensions import SecurityManager
 from src.routers import user_router
 
@@ -28,6 +33,5 @@ def create_app():
     app.add_exception_handler(OperationalError, operational_error_exc)
     app.add_exception_handler(ProgrammingError, programming_error_exc)
     app.add_exception_handler(CustomException, custom_exc)
-
 
     return app

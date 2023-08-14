@@ -21,6 +21,7 @@ def respond(status: int, detail: str, message: str):
         content={"status code": status, "message": message, "detail": detail},
     )
 
+
 async def custom_exc(request: Request, error: CustomException):
     logging.error(f"{error.message}: {error.detail}")
     return respond(error.status_code, error.detail, error.message)

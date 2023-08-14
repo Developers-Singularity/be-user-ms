@@ -47,6 +47,7 @@ def client(session) -> TestClient:
     app.dependency_overrides[db_session] = override_get_db
     yield TestClient(app)
 
+
 @pytest.fixture(scope="function")
 def client_offline_db(session) -> TestClient:
     """Pytest client fixture to test FastAPI endpoints.
@@ -55,8 +56,13 @@ def client_offline_db(session) -> TestClient:
     :return: TestClient to send requests to FastAPI endpoints
     :rtype: TestClient
     """
-    engine = create_engine("postgresql://username:password@localhost:3000/nonexist", pool_size=0, max_overflow=-1)
+    engine = create_engine(
+        "postgresql://username:password@localhost:3000/nonexist",
+        pool_size=0,
+        max_overflow=-1,
+    )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
     def override_get_db():
         session = TestingSessionLocal()
         try:
@@ -69,9 +75,25 @@ def client_offline_db(session) -> TestClient:
     app.dependency_overrides[db_session] = override_get_db
     yield TestClient(app)
 
+
 @pytest.fixture(scope="function")
 def create_users(session):
-    session.add(User(username="test_user_1", password=SecurityManager.hash(hash_string="test_user_pw_1")))
-    session.add(User(username="test_user_2", password=SecurityManager.hash(hash_string="test_user_pw_2")))
-    session.add(User(username="test_user_3", password=SecurityManager.hash(hash_string="test_user_pw_3")))
+    session.add(
+        User(
+            username="test_user_1",
+            password=SecurityManager.hash(hash_string="test_user_pw_1"),
+        )
+    )
+    session.add(
+        User(
+            username="test_user_2",
+            password=SecurityManager.hash(hash_string="test_user_pw_2"),
+        )
+    )
+    session.add(
+        User(
+            username="test_user_3",
+            password=SecurityManager.hash(hash_string="test_user_pw_3"),
+        )
+    )
     session.commit()

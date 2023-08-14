@@ -1,10 +1,17 @@
 import logging
+from typing import List
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from src.crud.user_crud import create_user, change_password
+from src.crud.user_crud import (
+    crud_create_user,
+    crud_change_password,
+    crud_get_user_by_id,
+    crud_get_all_users,
+)
 from src.database import db_session
+from src.errors import CustomException, custom_exc
 from src.schemas.user_schema import UserCreate, UserGet, UserChangePassword
 
 router = APIRouter(prefix="/user", tags=["User"])
@@ -13,20 +20,37 @@ router = APIRouter(prefix="/user", tags=["User"])
 @router.post("/", response_model=UserGet, status_code=status.HTTP_201_CREATED)
 async def crate_user(request_body: UserCreate, session: Session = Depends(db_session)):
     logging.info("REQUEST: create user")
-    response = await create_user(session, request_body)
+    response = await crud_create_user(session, request_body)
     logging.info("User created successfully.")
     return response
 
 
 @router.put("/change-password", response_model=UserGet, status_code=status.HTTP_200_OK)
-async def patch_password(request_body: UserChangePassword, session: Session = Depends(db_session)):
+async def patch_password(
+    request_body: UserChangePassword, session: Session = Depends(db_session)
+):
     logging.info("REQUEST: change password")
-    response = await change_password(session, request_body)
+    response = await crud_change_password(session, request_body)
     logging.info("Password changed successfully.")
     return response
 
 
-#@router.get("/")
-#async def get_all_users(session=Depends(db_session)):
-#    print(session)
-#    return {"message": "returned"}
+@router.get("/", response_model=List[UserGet], status_code=status.HTTP_200_OK)
+async def get_all_users(session=Depends(db_session)):
+    logging.info("REQUEST: change password")
+    response = await crud_get_all_users(session)
+    logging.info("Data fetched successfully.")
+    return response
+
+
+@router.get("/{user_id}", response_model=UserGet, status_code=status.HTTP_200_OK)
+async def get_user_by_id(user_id: int, session=Depends(db_session)):
+    logging.info("REQUEST: get user by ID")
+    response = await crud_get_user_by_id(session, user_id)
+    if not response:
+        logging.info("User with ID:{user_id} not found.")
+        raise CustomException(
+            200, "Resource not found", f"User with ID:{user_id} not found."
+        )
+    logging.info("Data fetched successfully.")
+    return response
