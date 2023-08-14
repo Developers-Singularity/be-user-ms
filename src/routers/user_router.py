@@ -1,19 +1,32 @@
+import logging
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from src.crud.user_crud import create_user, change_password
 from src.database import db_session
-from src.models.user_model import User
-from src.schemas.user_schema import UserCreate, UserGet
+from src.schemas.user_schema import UserCreate, UserGet, UserChangePassword
 
 router = APIRouter(prefix="/user", tags=["User"])
 
 
 @router.post("/", response_model=UserGet, status_code=status.HTTP_201_CREATED)
-async def crate_user(user_data: UserCreate, session: Session = Depends(db_session)):
-    return await User(**user_data.model_dump()).create_user(session)
+async def crate_user(request_body: UserCreate, session: Session = Depends(db_session)):
+    logging.info("REQUEST: create user")
+    response = await create_user(session, request_body)
+    logging.info("User created successfully.")
+    return response
 
 
-@router.get("/")
-async def get_all_users(session=Depends(db_session)):
-    print(session)
-    return {"message": "returned"}
+@router.put("/change-password", response_model=UserGet, status_code=status.HTTP_200_OK)
+async def patch_password(request_body: UserChangePassword, session: Session = Depends(db_session)):
+    logging.info("REQUEST: change password")
+    response = await change_password(session, request_body)
+    logging.info("Password changed successfully.")
+    return response
+
+
+#@router.get("/")
+#async def get_all_users(session=Depends(db_session)):
+#    print(session)
+#    return {"message": "returned"}

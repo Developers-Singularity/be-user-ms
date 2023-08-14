@@ -22,7 +22,6 @@ def db_session():
     session = SessionLocal()
     try:
         session.execute(text("SELECT 1"))
-
         yield session
     finally:
         session.close()

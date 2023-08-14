@@ -12,6 +12,9 @@ sqlalchemy = "*"
 black = "*"
 python-dotenv = "*"
 psycopg2 = "*"
+pytest = "*"
+httpx = "*"
+coverage = "*"
 
 [dev-packages]
 
