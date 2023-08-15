@@ -2,7 +2,7 @@
 Module containing error handles for global handling
 """
 import logging
-from fastapi import Request # pylint: disable=unused-argument
+from fastapi import Request  # pylint: disable=unused-argument
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from starlette.responses import JSONResponse
 
@@ -11,6 +11,7 @@ class CustomException(Exception):
     """
     Custom exception class
     """
+
     def __init__(self, status_code: int, message: str, detail: str):
         """Constructor method
 
@@ -37,7 +38,6 @@ def respond(status: int, detail: str, message: str):
     """
     # q: change below logging to olazy formating %
 
-
     logging.error("%s: %s", message, detail)
     return JSONResponse(
         status_code=status,
@@ -45,7 +45,9 @@ def respond(status: int, detail: str, message: str):
     )
 
 
-async def custom_exc(request: Request, error: CustomException): #pylint: disable=unused-argument
+async def custom_exc(
+    request: Request, error: CustomException
+):  # pylint: disable=unused-argument
     """Custom exception handler
 
     Args:
@@ -58,7 +60,9 @@ async def custom_exc(request: Request, error: CustomException): #pylint: disable
     return respond(error.status_code, error.detail, error.message)
 
 
-async def operational_error_exc(request: Request, error: OperationalError):#pylint: disable=unused-argument
+async def operational_error_exc(
+    request: Request, error: OperationalError
+):  # pylint: disable=unused-argument
     """Operational error handler
 
     Args:
@@ -73,7 +77,9 @@ async def operational_error_exc(request: Request, error: OperationalError):#pyli
     return respond(500, str(type(error.orig)), str(error.orig))
 
 
-async def programming_error_exc(request: Request, error: ProgrammingError):#pylint: disable=unused-argument
+async def programming_error_exc(
+    request: Request, error: ProgrammingError
+):  # pylint: disable=unused-argument
     """Programming error handler
 
     Args:
