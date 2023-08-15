@@ -1,3 +1,7 @@
+"""
+Module containing the routes for the user model
+"""
+
 import logging
 from typing import List
 
@@ -12,7 +16,6 @@ from src.crud.user_crud import (
     crud_update_user,
 )
 from src.database import db_session
-from src.errors import CustomException, custom_exc
 from src.schemas.user_schema import UserCreate, UserGet, UserChangePassword, UserUpdate
 
 router = APIRouter(prefix="/user", tags=["User"])
@@ -47,12 +50,15 @@ async def get_all_users(session=Depends(db_session)):
 @router.get("/{user_id}", response_model=UserGet, status_code=status.HTTP_200_OK)
 async def get_user_by_id(user_id: int, session=Depends(db_session)):
     logging.info("REQUEST: get user by ID")
-    response = await crud_get_user_by_id(session, user_id)        
+    response = await crud_get_user_by_id(session, user_id)
     logging.info("Data fetched successfully.")
     return response
 
+
 @router.put("/{user_id}", response_model=UserGet, status_code=status.HTTP_200_OK)
-async def update_user(user_id: int, request_body: UserUpdate, session=Depends(db_session)):
+async def update_user(
+    user_id: int, request_body: UserUpdate, session=Depends(db_session)
+):
     logging.info("REQUEST: update user")
     response = await crud_update_user(session, user_id, request_body)
     logging.info("Data updated successfully.")

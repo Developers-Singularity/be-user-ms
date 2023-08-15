@@ -1,3 +1,7 @@
+"""
+Test application general functionality.
+"""
+
 import pytest
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -13,9 +17,24 @@ def test_app_ok(client):
 @pytest.mark.parametrize(
     "user_data",
     [
-        {"username": "test_user_1", "password": "test_user_pw_1","name":"test_user_1","surname":"test_user_1"},
-        {"username": "test_user_2", "password": "test_user_pw_2","name":"test_user_2","surname":"test_user_2"},
-        {"username": "test_user_3", "password": "test_user_pw_3","name":"test_user_3","surname":"test_user_3"},
+        {
+            "username": "test_user_1",
+            "password": "test_user_pw_1",
+            "name": "test_user_1",
+            "surname": "test_user_1",
+        },
+        {
+            "username": "test_user_2",
+            "password": "test_user_pw_2",
+            "name": "test_user_2",
+            "surname": "test_user_2",
+        },
+        {
+            "username": "test_user_3",
+            "password": "test_user_pw_3",
+            "name": "test_user_3",
+            "surname": "test_user_3",
+        },
     ],
 )
 def test_database_error_offline(client_offline_db, user_data):

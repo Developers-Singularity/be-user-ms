@@ -1,7 +1,6 @@
 """
 Python Module for Handling Database connection via SQLAlchemy.
 """
-import os
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
@@ -15,9 +14,10 @@ Base = declarative_base()
 
 
 def db_session():
-    """
-    Function to yield Database Session instance.
-    :return:
+    """Function to create a new database session and close it after use.
+
+    Yields:
+        Session: database session
     """
     session = SessionLocal()
     try:

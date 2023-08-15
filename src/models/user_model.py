@@ -1,10 +1,10 @@
-import hashlib
+"""
+Module containing models for the user model
+"""
+
 
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import Session
-
 from src.database import Base
-from src.extensions import SecurityManager
 
 
 class User(Base):
