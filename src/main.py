@@ -1,6 +1,10 @@
+"""
+Module to create the FastAPI app and add the routes and middlewares
+"""
+
 from fastapi import FastAPI
-from sqlalchemy.exc import OperationalError, ProgrammingError
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from src.errors import (
     operational_error_exc,
     programming_error_exc,
@@ -12,6 +16,11 @@ from src.routers import user_router
 
 
 def create_app():
+    """Function to create the FastAPI app and add the routes and middlewares
+
+    Returns:
+        FastAPI: FastAPI app
+    """
     SecurityManager.validate_env()
 
     app = FastAPI()

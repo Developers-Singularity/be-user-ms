@@ -1,3 +1,7 @@
+"""
+Test user endpoint functionality.
+"""
+
 import pytest
 from src.extensions import SecurityManager
 

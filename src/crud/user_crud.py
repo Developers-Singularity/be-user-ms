@@ -1,4 +1,6 @@
-import logging
+"""
+Module containing the CRUD functions for the user model
+"""
 
 from sqlalchemy.orm import Session
 
@@ -9,14 +11,14 @@ from src.schemas.user_schema import UserChangePassword, UserCreate
 
 
 async def crud_create_user(session: Session, schema: UserCreate):
-    """CRUD function to create new User
+    """CRUD function to create a new User
 
-    :param session: database session
-    :type session: Session
-    :param schema: schema containing data
-    :type schema: UserCreate
-    :return: Created user
-    :rtype: User
+    Args:
+        session (Session): database session
+        schema (UserCreate): schema containing data
+
+    Returns:
+        User: User object which was created
     """
     # hashing password before save
     new_user = User(**schema.model_dump())
@@ -27,16 +29,18 @@ async def crud_create_user(session: Session, schema: UserCreate):
 
 
 async def crud_change_password(session: Session, schema: UserChangePassword):
-    """_summary_
+    """CRUD function to change the password of a User
 
-    :param session: database session
-    :type session: Session
-    :param schema: schema containing data
-    :type schema: UserChangePassword
-    :raises CustomException: Handled exception: Invalid password
-    :raises CustomException: Handled exception: User not found
-    :return: User object which password was changed
-    :rtype: User
+    Args:
+        session (Session): database session
+        schema (UserChangePassword): schema containing data
+
+    Raises:
+        CustomException: When invalid password
+        CustomException: When resource not found
+
+    Returns:
+        User: User object which was updated
     """
     if found := session.query(User).get(schema.id):
         if SecurityManager.compare_hash(found.password, schema.old_password):
@@ -57,10 +61,11 @@ async def crud_change_password(session: Session, schema: UserChangePassword):
 async def crud_get_all_users(session: Session):
     """CRUD function to get all User data
 
-    :param session: database session
-    :type session: Session
-    :return: Found users
-    :rtype: List[User]
+    Args:
+        session (Session): database session
+
+    Returns:
+        List[User]: List of all users
     """
     return session.query(User).all()
 
@@ -68,13 +73,15 @@ async def crud_get_all_users(session: Session):
 async def crud_get_user_by_id(session: Session, user_id: int):
     """CRUD function to get User data by ID
 
-    :param session: database session
-    :type session: Session
-    :param user_id: ID of user to find
-    :type user_id: int
-    :raises CustomException: Handled exception: User not found
-    :return: Found user
-    :rtype: User
+    Args:
+        session (Session): database session
+        user_id (int): ID of user to get
+
+    Raises:
+        CustomException: When resource not found
+
+    Returns:
+        User: User object which was fetched
     """
     if response := session.query(User).get(user_id):
         return response
@@ -84,17 +91,18 @@ async def crud_get_user_by_id(session: Session, user_id: int):
 
 
 async def crud_update_user(session: Session, user_id: int, schema: UserCreate):
-    """CRUD function to update User data by ID
+    """CRUD function to update User data
 
-    :param session: database session
-    :type session: Session
-    :param user_id: ID of user to update
-    :type user_id: int
-    :param schema: schema containing data
-    :type schema: UserCreate
-    :raises CustomException: Handled exception: User not found
-    :return: Updated user
-    :rtype: User
+    Args:
+        session (Session): database session
+        user_id (int): ID of user to update
+        schema (UserCreate): schema containing data
+
+    Raises:
+        CustomException: When resource not found
+
+    Returns:
+        User: User object which was updated
     """
     if found := session.query(User).get(user_id):
         for field, value in schema.model_dump(exclude_unset=True).items():

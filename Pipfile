@@ -15,6 +15,7 @@ psycopg2 = "*"
 pytest = "*"
 httpx = "*"
 coverage = "*"
+pylint = "*"
 
 [dev-packages]
 
