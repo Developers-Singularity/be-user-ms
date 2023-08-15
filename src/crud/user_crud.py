@@ -21,6 +21,12 @@ async def crud_create_user(session: Session, schema: UserCreate):
         User: User object which was created
     """
     # hashing password before save
+    if session.query(User).filter_by(email=schema.email).first():
+        raise CustomException(
+            422,
+            "Invalid email",
+            "User with this email already exists.",
+        )
     new_user = User(**schema.model_dump())
     new_user.password = SecurityManager.hash(hash_string=new_user.password)
     session.add(new_user)

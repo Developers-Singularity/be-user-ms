@@ -7,7 +7,6 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 alembic = "*"
-pydantic = "*"
 sqlalchemy = "*"
 black = "*"
 python-dotenv = "*"
@@ -16,6 +15,7 @@ pytest = "*"
 httpx = "*"
 coverage = "*"
 pylint = "*"
+pydantic = {version = "*", extras = ["email"]}
 
 [dev-packages]
 

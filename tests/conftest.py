@@ -84,7 +84,7 @@ def client_offline_db(session) -> TestClient:
 def create_users(session):
     session.add(
         User(
-            username="test_user_1",
+            email="test_user1@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_1"),
             name="test_user_1",
             surname="test_user_1",
@@ -92,7 +92,7 @@ def create_users(session):
     )
     session.add(
         User(
-            username="test_user_2",
+            email="test_user2@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_2"),
             name="test_user_2",
             surname="test_user_2",
@@ -100,7 +100,7 @@ def create_users(session):
     )
     session.add(
         User(
-            username="test_user_3",
+            email="test_user3@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_3"),
             name="test_user_3",
             surname="test_user_3",

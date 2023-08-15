@@ -14,19 +14,19 @@ router_prefix = "/user"
     "user_data",
     [
         {
-            "username": "test_user_1",
+            "email": "test_user1@gmail.com",
             "password": "test_user_pw_1",
             "name": "test_user_1",
             "surname": "test_user_1",
         },
         {
-            "username": "test_user_2",
+            "email": "test_user2@gmail.com",
             "password": "test_user_pw_2",
             "name": "test_user_2",
             "surname": "test_user_2",
         },
         {
-            "username": "test_user_3",
+            "email": "test_user3@gmail.com",
             "password": "test_user_pw_3",
             "name": "test_user_3",
             "surname": "test_user_3",
@@ -36,20 +36,31 @@ router_prefix = "/user"
 def test_post_user_ok(client, user_data, session):
     # test user creation
     response = client.post(router_prefix, json=user_data)
-    created = session.query(User).filter_by(username=user_data["username"]).first()
+    created = session.query(User).filter_by(email=user_data["email"]).first()
     assert response.status_code == 201
-    assert user_data["username"] == created.username
+    assert user_data["email"] == created.email
 
 
 @pytest.mark.parametrize(
     "user_data",
     [
-        {"username": "", "password": ""},
-        {"username": "name", "password": ""},
-        {"username": "", "password": "password", "name": "name", "surname": "surname"},
-        {"username": "name", "password": "pas", "name": "name", "surname": "surname"},
-        {"username": "name" * 6, "password": "password"},
-        {"username": "name", "password": "password" * 6},
+        {"email": "", "password": ""},
+        {"email": "test_user5@gmail.com", "password": ""},
+        {"email": "", "password": "password", "name": "name", "surname": "surname"},
+        {
+            "email": "test_user5@gmail.com",
+            "password": "pas",
+            "name": "name",
+            "surname": "surname",
+        },
+        {"email": "test_user5@gmail.com" * 6, "password": "password"},
+        {"email": "test_user5@gmail.com", "password": "password" * 6},
+        {
+            "email": "test_user3gmail.com",
+            "password": "test_user_pw_3",
+            "name": "test_user_3",
+            "surname": "test_user_3",
+        },
     ],
 )
 def test_post_user_bad_data(client, user_data, session):
