@@ -3,9 +3,9 @@ Test user endpoint functionality.
 """
 
 import pytest
-from src.extensions import SecurityManager
 
 from src.models.user_model import User
+from src.security import SecurityManager
 
 router_prefix = "/user"
 
@@ -39,6 +39,36 @@ def test_post_user_ok(client, user_data, session):
     created = session.query(User).filter_by(email=user_data["email"]).first()
     assert response.status_code == 201
     assert user_data["email"] == created.email
+
+
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {
+            "email": "test_user1@gmail.com",
+            "password": "test_user_pw_1",
+            "name": "test_user_1",
+            "surname": "test_user_1",
+        },
+        {
+            "email": "test_user2@gmail.com",
+            "password": "test_user_pw_2",
+            "name": "test_user_2",
+            "surname": "test_user_2",
+        },
+        {
+            "email": "test_user3@gmail.com",
+            "password": "test_user_pw_3",
+            "name": "test_user_3",
+            "surname": "test_user_3",
+        },
+    ],
+)
+def test_post_user_email_exists(client, user_data, session, create_users):
+    # test user creation
+    response = client.post(router_prefix, json=user_data)
+    assert response.status_code == 422
+    assert response.json()["detail"] == "User with this email already exists."
 
 
 @pytest.mark.parametrize(

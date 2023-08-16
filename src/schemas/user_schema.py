@@ -9,7 +9,8 @@ class UserGet(BaseModel):
     """
     Schema for getting a user
     """
-    model_config = ConfigDict(from_attributes=True) 
+
+    model_config = ConfigDict(from_attributes=True)
     id: int
     email: EmailStr
     name: str

@@ -5,7 +5,7 @@ Module containing the CRUD functions for the user model
 from sqlalchemy.orm import Session
 
 from src.errors import CustomException
-from src.extensions import SecurityManager
+from src.security import SecurityManager
 from src.models.user_model import User
 from src.schemas.user_schema import UserChangePassword, UserCreate
 

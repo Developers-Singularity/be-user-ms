@@ -11,7 +11,7 @@ from src.errors import (
     custom_exc,
     CustomException,
 )
-from src.extensions import SecurityManager
+from src.security import SecurityManager
 from src.routers import user_router, auth_router
 
 

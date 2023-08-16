@@ -1,5 +1,5 @@
 from src.errors import CustomException
-from src.extensions import SecurityManager
+from src.security import SecurityManager
 from src.schemas.auth_schema import LoginSchema
 from src.models.user_model import User
 from sqlalchemy.orm import Session
@@ -20,16 +20,8 @@ async def crud_login(session: Session, schema: LoginSchema):
     if found := session.query(User).filter_by(email=schema.email).first():
         if SecurityManager.compare_hash(found.password, schema.password):
             return {
-                "token": SecurityManager.generate_jwt(
+                "access_token": SecurityManager.generate_jwt(
                     UserGet.model_validate(found).model_dump()
                 ),
             }
-        else:
-            raise CustomException(
-                422,
-                "Invalid password",
-                "Old password does not match with the current one.",
-            )
-    raise CustomException(
-        200, "Resource not found", f"User with email {schema.email} not found."
-    )
+    raise CustomException(401, "Invalid credentials", "Incorrect email or password.")

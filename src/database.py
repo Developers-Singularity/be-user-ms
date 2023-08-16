@@ -4,7 +4,7 @@ Python Module for Handling Database connection via SQLAlchemy.
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
-from src.extensions import env_values
+from src.security import env_values
 
 
 engine = create_engine(env_values["DB_URI"], pool_size=0, max_overflow=-1)

@@ -11,4 +11,4 @@ class LoginSchema(BaseModel):
 class TokenSchema(BaseModel):
     """Schema to return and accept token"""
 
-    token: str
+    access_token: str

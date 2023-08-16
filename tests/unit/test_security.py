@@ -5,7 +5,7 @@ Test extensions.py module.
 import pytest
 
 from src.errors import CustomException
-from src.extensions import SecurityManager
+from src.security import SecurityManager
 
 
 def test_env_validation(monkeypatch):
@@ -15,6 +15,6 @@ def test_env_validation(monkeypatch):
     :type monkeypatch: MonkeyPatch
     """
     # test env validation
-    monkeypatch.setattr("src.extensions.required_variables", ["KEY"])
+    monkeypatch.setattr("src.security.required_variables", ["KEY"])
     with pytest.raises(SystemExit):
         SecurityManager.validate_env()

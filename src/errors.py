@@ -1,10 +1,10 @@
 """
 Module containing error handles for global handling
 """
-import logging
 from fastapi import Request  # pylint: disable=unused-argument
 from sqlalchemy.exc import OperationalError, ProgrammingError
-from starlette.responses import JSONResponse
+
+from src.utils import respond
 
 
 class CustomException(Exception):
@@ -12,7 +12,7 @@ class CustomException(Exception):
     Custom exception class
     """
 
-    def __init__(self, status_code: int, message: str, detail: str):
+    def __init__(self, status_code: int, message: str, detail: str = None):
         """Constructor method
 
         Args:
@@ -23,26 +23,6 @@ class CustomException(Exception):
         self.status_code = status_code
         self.message = message
         self.detail = detail
-
-
-def respond(status: int, detail: str, message: str):
-    """
-
-    Args:
-        status (int): status code
-        detail (str): detail
-        message (str): message
-
-    Returns:
-        JSONResponse: response
-    """
-    # q: change below logging to olazy formating %
-
-    logging.error("%s: %s", message, detail)
-    return JSONResponse(
-        status_code=status,
-        content={"status code": status, "message": message, "detail": detail},
-    )
 
 
 async def custom_exc(

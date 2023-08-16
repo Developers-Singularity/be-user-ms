@@ -73,18 +73,23 @@ class SecurityManager:
         return False
 
     @staticmethod
-    def generate_jwt(user_dict: dict):
+    def generate_jwt(
+        user_dict: dict,
+        expire: int = int(env_values["ACCESS_TOKEN_EXPIRE_MINUTES"]),
+    ):
         """Function to generate a JWT token
 
         Args:
-            user_dict (dict): dict with values to encode
+            user_dict (dict): User data dictionary
+            expire (dict, optional): Time for token to expire.
+            Defaults to {"minutes": int(env_values["ACCESS_TOKEN_EXPIRE_MINUTES"])}.
 
         Returns:
             str: JWT token
         """
         user_dict["exp"] = datetime.datetime.now(
             tz=datetime.timezone.utc
-        ) + datetime.timedelta(minutes=int(env_values["ACCESS_TOKEN_EXPIRE_MINUTES"]))
+        ) + datetime.timedelta(minutes=expire)
         return jwt.encode(
             user_dict,
             env_values["SECRET_KEY"],
@@ -102,18 +107,17 @@ class SecurityManager:
             dict: Decoded JWT token
         """
         try:
-            print(token)
             if jwt.decode(token, env_values["SECRET_KEY"], algorithms=["HS256"]):
                 return jwt.decode(token, env_values["SECRET_KEY"], algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
+        except jwt.ExpiredSignatureError as exc:
             raise CustomException(
                 401,
                 "Token expired",
                 "Token has expired, please login again.",
-            )
-        except jwt.InvalidTokenError:
+            ) from exc
+        except jwt.InvalidTokenError as exc:
             raise CustomException(
                 401,
                 "Invalid token",
                 "Token is invalid, please login again.",
-            )
+            ) from exc

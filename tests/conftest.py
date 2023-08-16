@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from src.database import Base, db_session
 from sqlalchemy.orm import sessionmaker, Session
 from src.main import create_app
-from src.extensions import SecurityManager, env_values
+from src.security import SecurityManager, env_values
 from src.models.user_model import User
 
 engine = create_engine(env_values["DB_TEST_URI"], pool_size=0, max_overflow=-1)
@@ -107,3 +107,13 @@ def create_users(session):
         )
     )
     session.commit()
+
+
+@pytest.fixture(scope="function")
+def expired_token():
+    return SecurityManager.generate_jwt({"name": "name"}, -1)
+
+
+@pytest.fixture(scope="function")
+def valid_token():
+    return SecurityManager.generate_jwt({"name": "name"}, 1)
