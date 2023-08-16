@@ -2,10 +2,13 @@
 Module containing all the extensions used in the application
 """
 
+import datetime
 import hashlib
 import sys
 
 from dotenv import dotenv_values
+import jwt
+
 
 env_values = dotenv_values(".env")
 required_variables = [
@@ -47,7 +50,7 @@ class SecurityManager:
 
         Returns:
             str: Hashed string
-        """ """"""
+        """
         return hashlib.md5(
             str(hash_string + env_values["HASH_SALT"]).encode()
         ).hexdigest()
@@ -66,3 +69,20 @@ class SecurityManager:
         if hashed_string == SecurityManager.hash(hash_string):
             return True
         return False
+
+    @staticmethod
+    def generate_jwt(user_dict: dict):
+        """Function to generate a JWT token
+
+        Args:
+            user_dict (dict): dict with values to encode
+
+        Returns:
+            str: JWT token
+        """
+        user_dict["exp"]=datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=env_values["ACCESS_TOKEN_EXPIRE_MINUTES"])
+        return jwt.encode(
+            user_dict,
+            env_values["SECRET_KEY"],
+            algorithm="HS256",
+        )

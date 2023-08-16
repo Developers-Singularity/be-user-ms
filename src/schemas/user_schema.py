@@ -2,14 +2,14 @@
 Module containing the schemas for the user model
 """
 
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import BaseModel, ConfigDict, EmailStr, constr
 
 
 class UserGet(BaseModel):
     """
     Schema for getting a user
     """
-
+    model_config = ConfigDict(from_attributes=True) 
     id: int
     email: EmailStr
     name: str
