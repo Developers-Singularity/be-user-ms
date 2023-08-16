@@ -9,6 +9,8 @@ import sys
 from dotenv import dotenv_values
 import jwt
 
+from src.errors import CustomException
+
 
 env_values = dotenv_values(".env")
 required_variables = [
@@ -80,9 +82,38 @@ class SecurityManager:
         Returns:
             str: JWT token
         """
-        user_dict["exp"]=datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=env_values["ACCESS_TOKEN_EXPIRE_MINUTES"])
+        user_dict["exp"] = datetime.datetime.now(
+            tz=datetime.timezone.utc
+        ) + datetime.timedelta(minutes=int(env_values["ACCESS_TOKEN_EXPIRE_MINUTES"]))
         return jwt.encode(
             user_dict,
             env_values["SECRET_KEY"],
             algorithm="HS256",
         )
+
+    @staticmethod
+    async def authenticate(token: str):
+        """Function to authenticate a JWT token
+
+        Args:
+            token (str): JWT token
+
+        Returns:
+            dict: Decoded JWT token
+        """
+        try:
+            print(token)
+            if jwt.decode(token, env_values["SECRET_KEY"], algorithms=["HS256"]):
+                return jwt.decode(token, env_values["SECRET_KEY"], algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            raise CustomException(
+                401,
+                "Token expired",
+                "Token has expired, please login again.",
+            )
+        except jwt.InvalidTokenError:
+            raise CustomException(
+                401,
+                "Invalid token",
+                "Token is invalid, please login again.",
+            )

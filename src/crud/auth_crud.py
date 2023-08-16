@@ -23,7 +23,6 @@ async def crud_login(session: Session, schema: LoginSchema):
                 "token": SecurityManager.generate_jwt(
                     UserGet.model_validate(found).model_dump()
                 ),
-                "token_type": "bearer",
             }
         else:
             raise CustomException(
