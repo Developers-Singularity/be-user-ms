@@ -18,19 +18,19 @@ def test_app_ok(client):
     "user_data",
     [
         {
-            "username": "test_user_1",
+            "email": "test_user1@gmail.com",
             "password": "test_user_pw_1",
             "name": "test_user_1",
             "surname": "test_user_1",
         },
         {
-            "username": "test_user_2",
+            "email": "test_user2@gmail.com",
             "password": "test_user_pw_2",
             "name": "test_user_2",
             "surname": "test_user_2",
         },
         {
-            "username": "test_user_3",
+            "email": "test_user3@gmail.com",
             "password": "test_user_pw_3",
             "name": "test_user_3",
             "surname": "test_user_3",

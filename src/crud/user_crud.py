@@ -5,7 +5,7 @@ Module containing the CRUD functions for the user model
 from sqlalchemy.orm import Session
 
 from src.errors import CustomException
-from src.extensions import SecurityManager
+from src.security import SecurityManager
 from src.models.user_model import User
 from src.schemas.user_schema import UserChangePassword, UserCreate
 
@@ -21,6 +21,12 @@ async def crud_create_user(session: Session, schema: UserCreate):
         User: User object which was created
     """
     # hashing password before save
+    if session.query(User).filter_by(email=schema.email).first():
+        raise CustomException(
+            422,
+            "Invalid email",
+            "User with this email already exists.",
+        )
     new_user = User(**schema.model_dump())
     new_user.password = SecurityManager.hash(hash_string=new_user.password)
     session.add(new_user)

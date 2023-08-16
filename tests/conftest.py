@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from src.database import Base, db_session
 from sqlalchemy.orm import sessionmaker, Session
 from src.main import create_app
-from src.extensions import SecurityManager, env_values
+from src.security import SecurityManager, env_values
 from src.models.user_model import User
 
 engine = create_engine(env_values["DB_TEST_URI"], pool_size=0, max_overflow=-1)
@@ -84,7 +84,7 @@ def client_offline_db(session) -> TestClient:
 def create_users(session):
     session.add(
         User(
-            username="test_user_1",
+            email="test_user1@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_1"),
             name="test_user_1",
             surname="test_user_1",
@@ -92,7 +92,7 @@ def create_users(session):
     )
     session.add(
         User(
-            username="test_user_2",
+            email="test_user2@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_2"),
             name="test_user_2",
             surname="test_user_2",
@@ -100,10 +100,20 @@ def create_users(session):
     )
     session.add(
         User(
-            username="test_user_3",
+            email="test_user3@gmail.com",
             password=SecurityManager.hash(hash_string="test_user_pw_3"),
             name="test_user_3",
             surname="test_user_3",
         )
     )
     session.commit()
+
+
+@pytest.fixture(scope="function")
+def expired_token():
+    return SecurityManager.generate_jwt({"name": "name"}, -1)
+
+
+@pytest.fixture(scope="function")
+def valid_token():
+    return SecurityManager.generate_jwt({"name": "name"}, 1)

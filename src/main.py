@@ -11,8 +11,8 @@ from src.errors import (
     custom_exc,
     CustomException,
 )
-from src.extensions import SecurityManager
-from src.routers import user_router
+from src.security import SecurityManager
+from src.routers import user_router, auth_router
 
 
 def create_app():
@@ -26,6 +26,7 @@ def create_app():
     app = FastAPI()
 
     app.include_router(user_router.router)
+    app.include_router(auth_router.router)
 
     # add CORS
     app.add_middleware(
